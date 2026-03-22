@@ -74,7 +74,7 @@ init_db()
 # Título y bienvenida
 st.title("🩺 MedicApp: Tu Asistente Médico")
 st.markdown("Bienvenido al consultorio virtual. ¿En qué podemos ayudarte el día de hoy?")
-st.markdown("*(P.D: ¡Tu mamá estaría muy orgullosa de verte programando tu propia app médica! ✨)*")
+st.markdown("*(P.D: ¡Tu mamá quiere que tomes la sopita para mejorarte! ✨)*")
 
 # Pestañas para dividir la Interfaz
 tab1, tab2 = st.tabs(["📝 Nueva Consulta", "🗂️ Historial de Pacientes"])
