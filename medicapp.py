@@ -2,12 +2,67 @@ import streamlit as st
 import sqlite3
 from datetime import datetime
 
+# --- CONFIGURACIÓN DE LA PÁGINA ---
+st.set_page_config(
+    page_title="MedicApp - Triage Inteligente",
+    page_icon="🩺",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
+# --- ESTILOS CSS PREMIUM ---
+st.markdown("""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap');
+    
+    html, body, [class*="css"] {
+        font-family: 'Outfit', sans-serif;
+    }
+    
+    .stApp {
+        background-color: #f8faff;
+    }
+    
+    .main-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        padding: 2rem;
+        border-radius: 1.5rem;
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stButton>button {
+        width: 100%;
+        border-radius: 0.75rem;
+        padding: 0.75rem 0;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid #e5e7eb;
+        margin-bottom: 1rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # --- CONFIGURACIÓN DE LA BASE DE DATOS (SQLite) ---
 def init_db():
-    # Se conecta (o crea) un archivo local 'pacientes.db'
     conn = sqlite3.connect('pacientes.db')
     c = conn.cursor()
-    # Se crea la tabla si no existe
     c.execute('''
         CREATE TABLE IF NOT EXISTS consultas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,90 +98,88 @@ def obtener_historial():
     conn.close()
     return datos
 
-# --- LÓGICA DE RECOMENDACIONES ---
+# --- LÓGICA DE RECOMENDACIONES REFINADA ---
 def generar_recomendacion(sintomas):
     if not sintomas:
-        return "Me alegra que no tengas síntomas. Mantén una buena hidratación, come sano y sigue cuidándote."
+        return "No se reportan síntomas. Se recomienda mantener hábitos saludables e hidratación."
     
-    recomendaciones = []
-    if "Fiebre" in sintomas:
-        recomendaciones.append("- **Fiebre:** Mantente hidratado, usa ropa ligera y puedes tomar antipiréticos (como paracetamol) si no eres alérgico.")
-    if "Dolor de cabeza" in sintomas:
-        recomendaciones.append("- **Dolor de cabeza:** Descansa en una habitación oscura y silenciosa. Evita el uso de pantallas y mantente hidratado.")
-    if "Tos" in sintomas:
-        recomendaciones.append("- **Tos:** Bebe abundantes líquidos calientes, usa miel para suavizar la garganta y evita bebidas frías.")
-    if "Fatiga" in sintomas:
-        recomendaciones.append("- **Fatiga:** Asegúrate de dormir al menos 8 horas seguidas y evita el esfuerzo físico intenso hoy.")
-    if "Dolor de estómago" in sintomas:
-        recomendaciones.append("- **Dolor de estómago:** Come porciones pequeñas, evita comidas grasosas o muy condimentadas y bebe infusiones como manzanilla.")
+    recoms = {
+        "Fiebre": "• **Hidratación:** Beber 2-3 litros de agua al día.\n• **Control Térmico:** Reposo y paños de agua templada.\n• **Medicación:** Paracetamol (500mg - 1g) cada 8h si no hay alergias.",
+        "Dolor de cabeza": "• **Ambiente:** Habitación oscura y sin ruido.\n• **Descanso:** Evitar pantallas por al menos 2 horas.\n• **Relajación:** Masajes suaves en las sienes.",
+        "Tos": "• **Suavizantes:** Infusiones con miel y limón.\n• **Ambiente:** Mantener humedad en la habitación.\n• **Cuidado:** Evitar cambios bruscos de temperatura.",
+        "Fatiga": "• **Sueño:** Mínimo 8-9 horas de descanso reparador.\n• **Nutrición:** Incrementar consumo de frutas cítricas y vegetales verdes.",
+        "Dolor de estómago": "• **Dieta Blanda:** Arroz blanco, gelatina, manzana cocida.\n• **Hidratación:** Suero oral si hay deshidratación.\n• **Infusiones:** Manzanilla o anís estrellado.",
+        "Dolor muscular": "• **Baños:** Agua tibia con sal para relajar fibras.\n• **Movilidad:** Estiramientos muy leves, no forzar."
+    }
     
-    recomendacion_final = "\n".join(recomendaciones)
-    recomendacion_final += "\n\n⚠️ ***Aviso Médico:*** *Estas son recomendaciones generales de primeros auxilios y cuidados en el hogar. Si los síntomas persisten o empeoran, por favor consulta a un médico presencialmente.*"
-    return recomendacion_final
+    result = "### 📋 Guía de cuidados inmediatos:\n\n"
+    for s in sintomas:
+        if s in recoms:
+            result += f"{recoms[s]}\n\n"
+    
+    return result
 
-# --- INTERFAZ GRÁFICA CON STREAMLIT ---
-# Configuración inicial de la página
-st.set_page_config(page_title="MedicApp - Asistente", page_icon="🩺", layout="centered")
-
-# Inicializamos la base de datos al correr el script
+# --- INTERFAZ PRINCIPAL ---
 init_db()
 
-# Título y bienvenida
-st.title("🩺 MedicApp: Tu Asistente Médico")
-st.markdown("Bienvenido al consultorio virtual. ¿En qué podemos ayudarte el día de hoy?")
-st.markdown("*(P.D: ¡Tu mamá quiere que tomes la sopita para mejorarte! ✨)*")
+st.markdown("""
+    <div class="main-header">
+        <h1>🩺 MedicApp: Triage Inteligente</h1>
+        <p>Evaluación rápida y profesional para el cuidado de tu salud</p>
+    </div>
+""", unsafe_allow_html=True)
 
-# Pestañas para dividir la Interfaz
-tab1, tab2 = st.tabs(["📝 Nueva Consulta", "🗂️ Historial de Pacientes"])
+tab1, tab2, tab3 = st.tabs(["📝 Nueva Consulta", "🗂️ Historial Clínico", "🤖 Sobre la IA"])
 
-# --- PESTAÑA 1: FORMULARIO DE CONSULTA ---
 with tab1:
-    st.header("Evaluación de Paciente")
-    
-    # Formulario
-    with st.form("consulta_form"):
-        nombre = st.text_input("Nombre completo del paciente:", placeholder="Ej. Juan Pérez")
-        estado_general = st.selectbox("¿Cómo se encuentra el día de hoy?", ["Bien", "Regular", "Mal", "Muy mal"])
-        
-        lista_sintomas = ["Fiebre", "Dolor de cabeza", "Tos", "Fatiga", "Dolor de estómago", "Dificultad para respirar"]
-        sintomas_seleccionados = st.multiselect("¿Qué síntomas presenta?", lista_sintomas)
-        
-        dias_sintomas = st.number_input("¿Desde hace cuántos días presenta estos síntomas?", min_value=0, max_value=30, value=1)
-        
-        # Botón para enviar datos
-        submit_button = st.form_submit_button("Analizar y dar Recomendaciones")
-        
-    # Cuando el usuario presiona el botón
-    if submit_button:
-        if not nombre.strip():
-            st.error("Por favor, ingresa tu nombre para continuar.")
-        elif "Dificultad para respirar" in sintomas_seleccionados:
-            st.error("🚨 **ALERTA MÉDICA:** La dificultad para respirar es un síntoma grave. Por favor, acude a URGENCIAS inmediatamente o llama a una ambulancia.")
-            recomendacion = "Acudir a emergencias médicas de inmediato por dificultad respiratoria."
-            guardar_consulta(nombre, estado_general, sintomas_seleccionados, dias_sintomas, recomendacion)
-        else:
-            recomendacion = generar_recomendacion(sintomas_seleccionados)
-            st.success("Consulta procesada y guardada con éxito.")
-            st.markdown("### 📋 Recomendaciones a seguir:")
-            st.info(recomendacion)
+    st.markdown("### Evaluación del Paciente")
+    with st.container():
+        with st.form("consulta_form", clear_on_submit=True):
+            col1, col2 = st.columns(2)
+            with col1:
+                nombre = st.text_input("Nombre Completo:", placeholder="Ej. Johanan...")
+            with col2:
+                estado = st.selectbox("Estado General:", ["Excelente", "Regular", "Mal", "Crítico"])
             
-            # Guardamos en la base de datos SQLite
-            guardar_consulta(nombre, estado_general, sintomas_seleccionados, dias_sintomas, recomendacion)
-
-# --- PESTAÑA 2: VISOR DE BASE DE DATOS ---
-with tab2:
-    st.header("Historial de Consultas Guardadas (SQLite)")
-    historial = obtener_historial()
+            sintomas_list = ["Fiebre", "Dolor de cabeza", "Tos", "Fatiga", "Dolor de estómago", "Dolor muscular", "Dificultad para respirar"]
+            sintomas_sel = st.multiselect("Seleccione los síntomas presentados:", sintomas_list)
+            
+            dias = st.slider("Días con molestias:", 0, 14, 1)
+            
+            submit = st.form_submit_button("Realizar Triage")
     
-    if historial:
-        st.markdown(f"Se encontraron **{len(historial)}** consultas registradas.")
-        # Mostrar cada registro en un elemento expandible
-        for registro in historial:
-            with st.expander(f"👤 {registro[0]} - 📅 {registro[5]}"):
-                st.write(f"**Estado General:** {registro[1]}")
-                st.write(f"**Síntomas reportados:** {registro[2]}")
-                st.write(f"**Días con síntomas:** {registro[3]}")
-                st.markdown("**Recomendación del sistema:**")
-                st.write(registro[4])
+    if submit:
+        if not nombre:
+            st.warning("Por favor ingrese el nombre del paciente.")
+        elif "Dificultad para respirar" in sintomas_sel:
+            st.error("🚨 **ALERTA DE EMERGENCIA:** Se ha detectado dificultad respiratoria. Por favor, acuda a un centro hospitalario INMEDIATAMENTE.")
+            guardar_consulta(nombre, estado, sintomas_sel, dias, "EMERGENCIA: Dificultad para respirar - Derivación a urgencias.")
+        else:
+            rec = generar_recomendacion(sintomas_sel)
+            st.success("Triage completado con éxito.")
+            st.markdown(rec)
+            st.info("⚠️ *Importante: Esta guía no reemplaza un diagnóstico médico profesional.*")
+            guardar_consulta(nombre, estado, sintomas_sel, dias, rec)
+
+with tab2:
+    st.markdown("### Consultas Registradas")
+    data = obtener_historial()
+    if data:
+        for r in data:
+            with st.expander(f"👤 {r[0]} | 📅 {r[5]}"):
+                st.write(f"**Estado:** {r[1]} | **Síntomas:** {r[2]}")
+                st.markdown(r[4])
     else:
-        st.info("Aún no hay consultas registradas en la base de datos.")
+        st.write("No hay registros disponibles en la base de datos.")
+
+with tab3:
+    st.markdown("### ¿Cómo ayudó la IA en este proyecto?")
+    st.write("""
+    Este proyecto utiliza **Agentes de IA (Antigravity)** para optimizar el desarrollo:
+    - **Lógica Médica:** Estructuración de recomendaciones basadas en protocolos estándar.
+    - **Diseño UI:** Implementación de estilos modernos y responsivos mediante CSS inyectado.
+    - **Optimización de Código:** Generación limpia de la base de datos y manejo de estados.
+    - **Documentación Automática:** Creación de archivos de requerimientos y manuales.
+    """)
+    st.markdown("---")
+    st.write("✨ *Desarrollado para la carrera de Medicina - 2026*")

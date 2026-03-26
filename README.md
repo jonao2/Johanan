@@ -1,61 +1,35 @@
-# 🩺 SymptomaCheck - Asistente Médico Inteligente
+# 🩺 MedicApp - Asistente Médico Inteligente
 
-Este proyecto es una plataforma de evaluación de síntomas y triaje médico, diseñada para ofrecer recomendaciones inmediatas basadas en la salud del usuario.
+Este proyecto es una plataforma de evaluación de síntomas y triaje médico, diseñada para ofrecer recomendaciones inmediatas basadas en la salud del usuario y optimizar el flujo de trabajo en la carrera de **Medicina**.
 
-## 🚀 Instalación y Configuración
+## 📄 Requerimientos del Proyecto
+Los detalles formales sobre la problemática, el MVP y el stack tecnológico se encuentran en el archivo [requirements.md](file:///c:/Users/Usuario/Downloads/codigos/Johanan/requirements.md).
 
-### 1. Entorno Backend (Python)
-Para inicializar el proyecto y configurar el entorno virtual (VENV):
+## 🚀 Cómo Ejecutar (Cualquier Dispositivo)
 
-```powershell
-# Clonar o entrar a la carpeta del proyecto
-cd PATH_AL_PROYECTO
+### Opción 1: Maqueta Interactiva (Universal)
+Para una demostración rápida en **cualquier dispositivo** (incluyendo móviles sin Python):
+1. Abrir el archivo [index.html](file:///c:/Users/Usuario/Downloads/codigos/Johanan/index.html) en cualquier navegador moderno.
+2. No requiere conexión a internet ni servidor.
 
-# Crear el entorno virtual (si no existe)
-python -m venv venv
+### Opción 2: Aplicación Completa (Streamlit + SQLite)
+Requiere entorno Python:
+1. Activar el entorno virtual: `.\venv\Scripts\activate.ps1`
+2. Instalar dependencias: `pip install -r requirements.txt`
+3. Ejecutar: `streamlit run medicapp.py`
 
-# ACTIVACIÓN DEL ENTORNO (Cada vez que empieces a trabajar):
-.\venv\Scripts\activate.ps1
+## 🤖 Registro de Proceso de IA
+Este proyecto fue desarrollado y asistido integralmente por herramientas de Inteligencia Artificial (**Antigravity**). La IA ayudó en las siguientes áreas:
+- **Diseño de Lógica de Triage:** Generación del árbol de decisiones para identificar síntomas de "Bandera Roja".
+- **Optimización de Interfaz:** Creación de estilos personalizados para Streamlit y desarrollo de la maqueta HTML/Tailwind responsiva.
+- **Persistencia de Datos:** Implementación del sistema de base de datos SQLite para el historial de pacientes.
+- **Documentación:** Redacción de requerimientos y guías de usuario siguiendo estándares profesionales.
 
-# Instalación de dependencias
-pip install -r requirements.txt
-```
-
-### 2. Base de Datos (PostgreSQL)
-Asegúrate de tener PostgreSQL corriendo en el puerto `5432`.
-- **Usuario**: `postgres`
-- **Contraseña**: `13diciembre`
-- **Base de Datos**: El sistema creará las tablas necesarias automáticamente.
-
-### 3. Frontend (React + Vite)
-Requiere Node.js y npm instalados.
-```bash
-# Entrar a la carpeta del frontend (cuando se genere)
-cd frontend
-npm install
-npm run dev
-```
-
-## 🛠️ Cómo Ejecutar
-
-### Opción A: Prototipo Rápido (Streamlit)
-Si deseas ejecutar la versión rápida en Python:
-```powershell
-streamlit run medicapp.py
-```
-
-### Opción B: Aplicación Moderna (FastAPI + React)
-1. Iniciar Backend:
-   ```powershell
-   uvicorn main:app --reload
-   ```
-2. Iniciar Frontend (en otra terminal):
-   ```powershell
-   npm run dev
-   ```
-
-## 📝 Registro de Avance
-Puedes seguir el progreso detallado del desarrollo en el archivo `avance.md`.
+## 🛠️ Stack Tecnológico
+- **Python / Streamlit** (Backend y UI principal)
+- **SQLite** (Base de datos local)
+- **HTML5 / CSS3 / Tailwind** (Maqueta de portabilidad universal)
 
 ---
 ⚠️ **Disclaimer Legal:** *Esta aplicación es una herramienta informativa y no sustituye un diagnóstico médico profesional. En caso de emergencia, acuda inmediatamente a un centro de salud.*
+

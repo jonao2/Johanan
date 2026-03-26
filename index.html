@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedicApp - Maqueta Interactiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #f0f4f8; }
+        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-2xl mx-auto space-y-6">
+        <header class="text-center py-8">
+            <h1 class="text-4xl font-bold text-blue-800">🩺 MedicApp</h1>
+            <p class="text-gray-600 mt-2">Maqueta Interactiva de Evaluación de Síntomas</p>
+        </header>
+
+        <section class="glass rounded-3xl p-6 shadow-xl space-y-4">
+            <h2 class="text-xl font-semibold text-gray-700">Formulario de Triaje</h2>
+            <div>
+                <label class="block text-sm font-medium text-gray-600">Nombre del Paciente</label>
+                <input type="text" id="nombre" class="w-full mt-1 p-3 border rounded-xl" placeholder="Ej. Juan Pérez">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-600">Síntoma Principal</label>
+                <select id="sintoma" class="w-full mt-1 p-3 border rounded-xl">
+                    <option value="nada">Ninguno</option>
+                    <option value="fiebre">Fiebre</option>
+                    <option value="cabeza">Dolor de cabeza</option>
+                    <option value="respirar" class="text-red-600 font-bold">Dificultad para respirar (URGENTE)</option>
+                    <option value="tos">Tos</option>
+                    <option value="fatiga">Fatiga</option>
+                    <option value="estomago">Dolor de estómago</option>
+                </select>
+            </div>
+
+            <button onclick="analizar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg transform hover:scale-[1.02]">
+                Analizar Síntomas
+            </button>
+        </section>
+
+        <section id="resultado" class="hidden glass rounded-3xl p-6 shadow-xl border-l-8 border-blue-500">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Resumen de Evaluación</h3>
+            <p id="mensaje" class="text-gray-700 leading-relaxed"></p>
+            <div id="alerta" class="hidden mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded" role="alert">
+                <p class="font-bold">🚨 ALERTA MÉDICA</p>
+                <p>Por favor, acuda a URGENCIAS inmediatamente o llame al 911/emergencias.</p>
+            </div>
+        </section>
+
+        <footer class="text-center text-xs text-gray-500 mt-8">
+            <p>⚠️ Disclaimer: Esta es una herramienta informativa. No sustituye un diagnóstico médico profesional.</p>
+            <p class="mt-2">Desarrollado con IA (Antigravity) para el proyecto de Medicina.</p>
+        </footer>
+    </div>
+
+    <script>
+        function analizar() {
+            const nombre = document.getElementById('nombre').value || 'Paciente';
+            const sintoma = document.getElementById('sintoma').value;
+            const res = document.getElementById('resultado');
+            const msg = document.getElementById('mensaje');
+            const alerta = document.getElementById('alerta');
+
+            res.classList.remove('hidden');
+            alerta.classList.add('hidden');
+            res.classList.remove('border-red-500');
+            res.classList.add('border-blue-500');
+
+            if (sintoma === 'respirar') {
+                msg.innerText = `Hola ${nombre}, hemos detectado síntomas críticos asociados a dificultad respiratoria.`;
+                alerta.classList.remove('hidden');
+                res.classList.add('border-red-500');
+                res.classList.remove('border-blue-500');
+            } else if (sintoma === 'fiebre') {
+                msg.innerText = `Hola ${nombre}, los síntomas de fiebre sugieren hidratación y reposo. Si persiste por más de 3 días, consulte a un profesional.`;
+            } else if (sintoma === 'nada') {
+                msg.innerText = `Hola ${nombre}, no has seleccionado síntomas graves. ¡Sigue cuidándote!`;
+            } else {
+                msg.innerText = `Hola ${nombre}, se recomienda monitorear tus síntomas y descansar.`;
+            }
+        }
+    </script>
+</body>
+</html>
