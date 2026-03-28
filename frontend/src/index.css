@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-medic-bg: #020617;
+  --color-medic-card: rgba(15, 23, 42, 0.6);
+  --color-medic-primary: #3b82f6;
+  --color-medic-emergency: #ef4444;
+  --color-medic-success: #10b981;
+  --color-medic-border: rgba(255, 255, 255, 0.08);
+  
+  --animate-pulse-heart: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.1); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.1); }
+  70% { transform: scale(1); }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--color-medic-bg);
+  color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.glass {
+  background: var(--color-medic-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-medic-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ECG Pulse Line Animation */
+.ecg-line {
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--color-medic-primary) 50%, 
+    transparent 100%
+  );
+  width: 100px;
+  position: absolute;
+  bottom: 0;
+  left: -100px;
+  animation: ecg-sweep 3s linear infinite;
+}
+
+@keyframes ecg-sweep {
+  0% { left: -100px; }
+  100% { left: 100%; }
+}
